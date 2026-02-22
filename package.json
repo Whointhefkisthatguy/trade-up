@@ -1,11 +1,12 @@
 {
   "name": "trade-up",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Automotive DMS middleware + CRM platform built on Ironclaw/OpenClaw with DuckDB",
   "type": "module",
   "scripts": {
     "migrate": "node migrations/migrate.js",
-    "test": "node --test tests/*.test.js"
+    "test": "node --test --test-concurrency=1 tests/*.test.js",
+    "start": "node server.js"
   },
   "dependencies": {
     "@duckdb/node-api": "1.4.4-r.1",
@@ -13,6 +14,7 @@
     "@shaggytools/nhtsa-api-wrapper": "^3.0.4",
     "dotenv": "^16.4.0",
     "handlebars": "^4.7.8",
+    "express": "^4.21.0",
     "twilio": "^5.4.0",
     "uuid": "^11.1.0"
   }

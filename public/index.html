@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trade Up — Equity Mining Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="top-bar-brand">Trade Up</div>
+    <div class="top-bar-controls">
+      <label for="org-select">Dealership:</label>
+      <select id="org-select">
+        <option value="">— Select a dealership —</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Welcome Panel -->
+  <div id="welcome-panel" class="welcome-panel">
+    <div class="welcome-content">
+      <h1>Equity Mining Dashboard</h1>
+      <p>Select a dealership above to view their equity pipeline, analyze vehicle portfolios, and preview branded trade-in offers.</p>
+    </div>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div id="dashboard" class="dashboard hidden">
+    <!-- Dealer Header -->
+    <div id="dealer-header" class="dealer-header">
+      <h2 id="dealer-name"></h2>
+      <p id="dealer-tagline"></p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div id="summary-cards" class="summary-cards"></div>
+
+    <!-- Pipeline Funnel -->
+    <div class="section-header">
+      <h3>Equity Pipeline</h3>
+      <button id="batch-analyze-btn" class="btn btn-primary">
+        <span class="btn-text">Run Batch Analysis</span>
+        <span class="spinner hidden"></span>
+      </button>
+    </div>
+    <div id="pipeline" class="pipeline"></div>
+
+    <!-- Vehicle Table -->
+    <h3 class="section-title">Vehicles</h3>
+    <div class="table-wrapper">
+      <table class="vehicle-table">
+        <thead>
+          <tr>
+            <th>Vehicle</th>
+            <th>VIN</th>
+            <th>Mileage</th>
+            <th>Owner</th>
+            <th>Market Value</th>
+            <th>Payoff</th>
+            <th>Equity</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="vehicle-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Offer Preview Modal -->
+  <div id="offer-modal" class="modal-overlay hidden">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Offer Preview</h3>
+        <button id="modal-close" class="modal-close">&times;</button>
+      </div>
+      <iframe id="offer-iframe" class="offer-iframe" sandbox="allow-same-origin"></iframe>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
