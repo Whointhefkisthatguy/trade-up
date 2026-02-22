@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update — {{taskTitle}}</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, Helvetica, sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4;">
+    <tr>
+      <td align="center" style="padding: 20px 0;">
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+
+          <!-- Status Bar -->
+          <tr>
+            <td style="background-color: #1565c0; padding: 4px 0;"></td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding: 35px 40px;">
+              <p style="color: #333333; font-size: 16px; margin: 0 0 20px;">
+                Hi {{recipientName}},
+              </p>
+
+              <!-- Status Badge -->
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 0 20px;">
+                <tr>
+                  <td style="background-color: #e3f2fd; color: #1565c0; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; padding: 6px 14px; border-radius: 4px;">
+                    Update
+                  </td>
+                </tr>
+              </table>
+
+              <h2 style="color: #333333; font-size: 20px; margin: 0 0 10px;">Update on:</h2>
+              <h3 style="color: #1565c0; font-size: 18px; margin: 0 0 20px; font-weight: normal;">{{taskTitle}}</h3>
+
+              {{#if taskDescription}}
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 0 0 20px;">
+                <tr>
+                  <td style="background-color: #fafafa; border-radius: 6px; padding: 15px 20px;">
+                    <p style="color: #666666; font-size: 14px; line-height: 1.6; margin: 0;">{{taskDescription}}</p>
+                  </td>
+                </tr>
+              </table>
+              {{/if}}
+
+              {{#if statusMessage}}
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 0 0 25px;">
+                <tr>
+                  <td style="background-color: #e3f2fd; border-left: 4px solid #1565c0; border-radius: 0 6px 6px 0; padding: 15px 20px;">
+                    <p style="color: #333333; font-size: 15px; line-height: 1.5; margin: 0;">{{statusMessage}}</p>
+                  </td>
+                </tr>
+              </table>
+              {{/if}}
+
+              {{#if actionUrl}}
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center">
+                    <a href="{{actionUrl}}" style="display: inline-block; background-color: #1565c0; color: #ffffff; font-size: 16px; font-weight: bold; text-decoration: none; padding: 12px 30px; border-radius: 6px;">
+                      View Task
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              {{/if}}
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="border-top: 1px solid #eeeeee; padding: 20px 40px; text-align: center;">
+              <p style="color: #aaaaaa; font-size: 12px; margin: 0;">
+                This is an automated notification from Trade Up CRM.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

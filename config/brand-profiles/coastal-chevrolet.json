@@ -1,0 +1,22 @@
+{
+  "org_id": "org-dealer-coastal",
+  "name": "Coastal Chevrolet",
+  "brand": "Chevrolet",
+  "colors": {
+    "primary": "#D1A032",
+    "secondary": "#1A1A1A",
+    "accent": "#E8B84B",
+    "background": "#FFFDF5"
+  },
+  "logo_url": "https://coastalchevy.com/assets/logo.png",
+  "voice": "bold",
+  "tagline": "Bold Rides on the Coast",
+  "email_from_name": "Coastal Chevrolet",
+  "email_from_address": "offers@coastalchevy.com",
+  "sms_sender_name": "Coastal Chevy",
+  "social": {
+    "instagram": "@coastalchevy",
+    "facebook": "CoastalChevroletMiami",
+    "linkedin": "coastal-chevrolet"
+  }
+}

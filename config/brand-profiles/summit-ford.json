@@ -1,0 +1,22 @@
+{
+  "org_id": "org-dealer-summit",
+  "name": "Summit Ford",
+  "brand": "Ford",
+  "colors": {
+    "primary": "#003478",
+    "secondary": "#FFFFFF",
+    "accent": "#0068D6",
+    "background": "#F5F7FA"
+  },
+  "logo_url": "https://summitford.com/assets/logo.png",
+  "voice": "professional",
+  "tagline": "Driving Excellence in Denver",
+  "email_from_name": "Summit Ford",
+  "email_from_address": "offers@summitford.com",
+  "sms_sender_name": "Summit Ford",
+  "social": {
+    "instagram": "@summitford",
+    "facebook": "SummitFordDenver",
+    "linkedin": "summit-ford"
+  }
+}

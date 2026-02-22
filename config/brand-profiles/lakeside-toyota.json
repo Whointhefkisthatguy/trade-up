@@ -1,0 +1,22 @@
+{
+  "org_id": "org-dealer-lakeside",
+  "name": "Lakeside Toyota",
+  "brand": "Toyota",
+  "colors": {
+    "primary": "#EB0A1E",
+    "secondary": "#282830",
+    "accent": "#FF4444",
+    "background": "#FAFAFA"
+  },
+  "logo_url": "https://lakesidetoyota.com/assets/logo.png",
+  "voice": "friendly",
+  "tagline": "Your Trusted Toyota Dealer in Austin",
+  "email_from_name": "Lakeside Toyota",
+  "email_from_address": "offers@lakesidetoyota.com",
+  "sms_sender_name": "Lakeside Toyota",
+  "social": {
+    "instagram": "@lakesidetoyota",
+    "facebook": "LakesideToyotaAustin",
+    "linkedin": "lakeside-toyota"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "org_id": "org-dealer-mountain",
+  "name": "Mountain Subaru",
+  "brand": "Subaru",
+  "colors": {
+    "primary": "#003DA5",
+    "secondary": "#63B1E5",
+    "accent": "#0055CC",
+    "background": "#F0F6FF"
+  },
+  "logo_url": "https://mountainsubaru.com/assets/logo.png",
+  "voice": "adventurous",
+  "tagline": "Adventure Starts Here in Portland",
+  "email_from_name": "Mountain Subaru",
+  "email_from_address": "offers@mountainsubaru.com",
+  "sms_sender_name": "Mountain Subaru",
+  "social": {
+    "instagram": "@mountainsubaru",
+    "facebook": "MountainSubaruPortland",
+    "linkedin": "mountain-subaru"
+  }
+}

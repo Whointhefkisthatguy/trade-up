@@ -1,0 +1,22 @@
+{
+  "org_id": "org-dealer-premier",
+  "name": "Premier Honda",
+  "brand": "Honda",
+  "colors": {
+    "primary": "#CC0000",
+    "secondary": "#000000",
+    "accent": "#E60000",
+    "background": "#F8F8F8"
+  },
+  "logo_url": "https://premierhonda.com/assets/logo.png",
+  "voice": "energetic",
+  "tagline": "Premier Performance in Phoenix",
+  "email_from_name": "Premier Honda",
+  "email_from_address": "offers@premierhonda.com",
+  "sms_sender_name": "Premier Honda",
+  "social": {
+    "instagram": "@premierhonda",
+    "facebook": "PremierHondaPhoenix",
+    "linkedin": "premier-honda"
+  }
+}

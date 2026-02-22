@@ -1,0 +1,45 @@
+{
+  "defaults": {
+    "min_positive_equity": 1000,
+    "max_negative_equity": -2000,
+    "breakeven_range": [-999, 999],
+    "min_vehicle_age_years": 2,
+    "max_vehicle_age_years": 7,
+    "min_mileage": 15000,
+    "max_mileage": 120000,
+    "valuation_sources": ["kbb", "nada", "blackbook"],
+    "offer_expiry_days": 30,
+    "followup_interval_days": 7,
+    "max_followups": 3,
+    "exclude_recent_purchase_days": 365,
+    "include_lease_end_within_days": 120
+  },
+  "overrides": {
+    "org-dealer-summit": {
+      "min_positive_equity": 500,
+      "max_vehicle_age_years": 8,
+      "offer_expiry_days": 45,
+      "notes": "Summit Ford casts a wider net on equity candidates"
+    },
+    "org-dealer-lakeside": {
+      "valuation_sources": ["kbb", "vauto"],
+      "followup_interval_days": 5,
+      "notes": "Lakeside Toyota prefers KBB + vAuto, more aggressive follow-up"
+    },
+    "org-dealer-premier": {
+      "min_positive_equity": 1500,
+      "max_mileage": 100000,
+      "notes": "Premier Honda targets higher equity positions"
+    },
+    "org-dealer-coastal": {
+      "min_vehicle_age_years": 1,
+      "max_vehicle_age_years": 5,
+      "notes": "Coastal Chevrolet focuses on newer vehicles"
+    },
+    "org-dealer-mountain": {
+      "include_lease_end_within_days": 180,
+      "max_followups": 5,
+      "notes": "Mountain Subaru extends lease-end window and allows more follow-ups"
+    }
+  }
+}

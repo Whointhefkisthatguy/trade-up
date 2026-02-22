@@ -1,0 +1,37 @@
+{
+  "name": "trade-up",
+  "version": "0.1.0",
+  "description": "Automotive DMS middleware + CRM platform",
+  "database": {
+    "type": "duckdb",
+    "path": "./trade-up.duckdb"
+  },
+  "skills": [
+    "skills/vin-decoder",
+    "skills/service-equity-monitor",
+    "skills/trade-offer-send",
+    "skills/client-status-notify",
+    "skills/vendor-task-manager",
+    "skills/social-content-pipeline",
+    "skills/digital-audit-runner",
+    "skills/hiring-pipeline-sync"
+  ],
+  "services": [
+    "services/db.js",
+    "services/vin-decoder.js",
+    "services/vauto-client.js",
+    "services/valuation.js",
+    "services/valuation-mock.js",
+    "services/equity-analyzer.js",
+    "services/offer-renderer.js",
+    "services/email-delivery.js",
+    "services/sms-delivery.js",
+    "services/notification-engine.js",
+    "services/appointment-monitor.js",
+    "services/dms-mapper.js",
+    "services/response-tracker.js"
+  ],
+  "migrations": "migrations/",
+  "templates": "templates/",
+  "config": "config/"
+}

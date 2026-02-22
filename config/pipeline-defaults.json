@@ -1,0 +1,66 @@
+{
+  "pipelines": {
+    "equity": {
+      "name": "Equity Mining",
+      "description": "Identify and convert customers with positive trade-in equity",
+      "stages": [
+        "identified",
+        "data_enriched",
+        "valuation_complete",
+        "equity_calculated",
+        "offer_generated",
+        "offer_sent",
+        "offer_opened",
+        "customer_responded",
+        "appointment_set",
+        "converted"
+      ],
+      "auto_advance": false,
+      "default_engagement_type": "equity_mining"
+    },
+    "hiring": {
+      "name": "Hiring Pipeline",
+      "description": "Recruitment process from sourcing to onboarding",
+      "stages": [
+        "sourced",
+        "screening",
+        "phone_interview",
+        "in_person_interview",
+        "offer_extended",
+        "offer_accepted",
+        "onboarded"
+      ],
+      "auto_advance": false,
+      "default_engagement_type": "hiring"
+    },
+    "content": {
+      "name": "Content Pipeline",
+      "description": "Social media content creation and publishing workflow",
+      "stages": [
+        "idea",
+        "drafting",
+        "review",
+        "approved",
+        "scheduled",
+        "published"
+      ],
+      "auto_advance": true,
+      "default_engagement_type": "social_media"
+    },
+    "consulting": {
+      "name": "Consulting Pipeline",
+      "description": "Digital audit and consulting engagement workflow",
+      "stages": [
+        "discovery",
+        "audit_in_progress",
+        "findings_ready",
+        "presented",
+        "action_plan",
+        "implementing",
+        "completed"
+      ],
+      "auto_advance": false,
+      "default_engagement_type": "digital_audit"
+    }
+  }
+}
