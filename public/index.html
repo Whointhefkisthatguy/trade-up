@@ -80,6 +80,30 @@
     </div>
   </div>
 
+  <!-- Deal Sheet Modal -->
+  <div id="deal-sheet-modal" class="modal-overlay hidden">
+    <div class="modal-container modal-wide">
+      <div class="modal-header">
+        <h3>Internal Deal Sheet</h3>
+        <div class="modal-actions" id="deal-sheet-actions"></div>
+        <button id="deal-sheet-modal-close" class="modal-close">&times;</button>
+      </div>
+      <iframe id="deal-sheet-iframe" class="offer-iframe" sandbox="allow-same-origin"></iframe>
+    </div>
+  </div>
+
+  <!-- Client Offer Modal -->
+  <div id="client-offer-modal" class="modal-overlay hidden">
+    <div class="modal-container modal-wide">
+      <div class="modal-header">
+        <h3>Client Offer Preview</h3>
+        <div class="modal-actions" id="client-offer-actions"></div>
+        <button id="client-offer-modal-close" class="modal-close">&times;</button>
+      </div>
+      <iframe id="client-offer-iframe" class="offer-iframe" sandbox="allow-same-origin"></iframe>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="toast" class="toast hidden"></div>
 

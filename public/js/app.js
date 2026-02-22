@@ -25,8 +25,16 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#offer-modal').addEventListener('click', (e) => {
     if (e.target === $('#offer-modal')) closeModal();
   });
+  $('#deal-sheet-modal-close').addEventListener('click', closeDealSheetModal);
+  $('#deal-sheet-modal').addEventListener('click', (e) => {
+    if (e.target === $('#deal-sheet-modal')) closeDealSheetModal();
+  });
+  $('#client-offer-modal-close').addEventListener('click', closeClientOfferModal);
+  $('#client-offer-modal').addEventListener('click', (e) => {
+    if (e.target === $('#client-offer-modal')) closeClientOfferModal();
+  });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') { closeModal(); closeDealSheetModal(); closeClientOfferModal(); }
   });
 });
 
@@ -138,6 +146,17 @@ function renderVehicleTable(assets) {
     const eqCls = equity != null ? (equity >= 0 ? 'equity-positive' : 'equity-negative') : '';
     const fmtMoney = (v) => v != null ? `$${Number(v).toLocaleString()}` : '—';
 
+    let actionBtn = '';
+    if (a.analysis_id) {
+      if (!a.deal_sheet_id) {
+        actionBtn = `<button class="btn btn-primary btn-sm" onclick="generateDealSheet('${a.analysis_id}')">Deal Sheet</button>`;
+      } else if (a.deal_sheet_status === 'client_offer_sent') {
+        actionBtn = `<button class="btn btn-primary btn-sm" onclick="viewDealSheet('${a.deal_sheet_id}')">View Deal Sheet</button> <span class="badge badge-client_offer_sent" style="font-size:10px">Offer Sent</span>`;
+      } else {
+        actionBtn = `<button class="btn btn-primary btn-sm" onclick="viewDealSheet('${a.deal_sheet_id}')">View Deal Sheet</button>`;
+      }
+    }
+
     return `<tr>
       <td><strong>${a.year} ${a.make} ${a.model}</strong><br><small style="color:#888">${a.trim || ''}</small></td>
       <td><code style="font-size:12px">${a.vin || '—'}</code></td>
@@ -147,7 +166,7 @@ function renderVehicleTable(assets) {
       <td>${fmtMoney(a.payoff_amount)}</td>
       <td class="equity-value ${eqCls}">${equity != null ? fmtMoney(equity) : '—'}</td>
       <td><span class="badge ${badgeCls}">${eqType}</span></td>
-      <td>${a.analysis_id ? `<button class="btn btn-primary btn-sm" onclick="openOfferPreview('${a.analysis_id}')">Preview Offer</button>` : ''}</td>
+      <td>${actionBtn}</td>
     </tr>`;
   }).join('');
 }
@@ -200,6 +219,112 @@ async function openOfferPreview(analysisId) {
 function closeModal() {
   $('#offer-modal').classList.add('hidden');
   const iframe = $('#offer-iframe');
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write('');
+  doc.close();
+}
+
+// ── Deal Sheet Workflow ─────────────────────────────────────────
+
+let currentDealSheetId = null;
+
+async function generateDealSheet(analysisId) {
+  try {
+    showToast('Generating deal sheet...');
+    const result = await api('/api/deal-sheets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ analysisId }),
+    });
+    currentDealSheetId = result.id;
+    openDealSheetModal(result.html, 'generated');
+    showToast('Deal sheet generated');
+    loadDashboard(currentOrgId);
+  } catch (err) {
+    showToast('Could not generate deal sheet: ' + err.message);
+  }
+}
+
+async function viewDealSheet(dealSheetId) {
+  try {
+    const result = await api(`/api/deal-sheets/${dealSheetId}`);
+    currentDealSheetId = dealSheetId;
+    openDealSheetModal(result.html, result.dealSheet.status);
+  } catch (err) {
+    showToast('Could not load deal sheet: ' + err.message);
+  }
+}
+
+function openDealSheetModal(html, status) {
+  const iframe = $('#deal-sheet-iframe');
+  $('#deal-sheet-modal').classList.remove('hidden');
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(html);
+  doc.close();
+  updateDealSheetActions(status);
+}
+
+function updateDealSheetActions(status) {
+  const actions = $('#deal-sheet-actions');
+  if (status === 'generated' || status === 'viewed') {
+    actions.innerHTML = `<button class="btn btn-success btn-sm" onclick="markAsPresented('${currentDealSheetId}')">Mark as Presented</button>`;
+  } else if (status === 'presented') {
+    actions.innerHTML = `<span class="badge badge-presented">Presented</span> <button class="btn btn-primary btn-sm" onclick="sendClientOffer('${currentDealSheetId}')">Send Client Offer</button>`;
+  } else if (status === 'client_offer_sent') {
+    actions.innerHTML = `<span class="badge badge-client_offer_sent">Client Offer Sent</span>`;
+  } else {
+    actions.innerHTML = '';
+  }
+}
+
+async function markAsPresented(dealSheetId) {
+  try {
+    const result = await api(`/api/deal-sheets/${dealSheetId}/present`, { method: 'POST' });
+    updateDealSheetActions('presented');
+    showToast('Deal sheet marked as presented');
+    loadDashboard(currentOrgId);
+  } catch (err) {
+    showToast('Error: ' + err.message);
+  }
+}
+
+async function sendClientOffer(dealSheetId) {
+  try {
+    const result = await api(`/api/deal-sheets/${dealSheetId}/client-offer`, { method: 'POST' });
+    updateDealSheetActions('client_offer_sent');
+    showToast('Client offer generated');
+
+    // Show client offer preview
+    const iframe = $('#client-offer-iframe');
+    $('#client-offer-modal').classList.remove('hidden');
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write(result.html);
+    doc.close();
+
+    const offerUrl = window.location.origin + result.url;
+    $('#client-offer-actions').innerHTML = `<div class="offer-url-box">${offerUrl}</div>`;
+
+    loadDashboard(currentOrgId);
+  } catch (err) {
+    showToast('Error: ' + err.message);
+  }
+}
+
+function closeDealSheetModal() {
+  $('#deal-sheet-modal').classList.add('hidden');
+  const iframe = $('#deal-sheet-iframe');
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write('');
+  doc.close();
+}
+
+function closeClientOfferModal() {
+  $('#client-offer-modal').classList.add('hidden');
+  const iframe = $('#client-offer-iframe');
   const doc = iframe.contentDocument || iframe.contentWindow.document;
   doc.open();
   doc.write('');

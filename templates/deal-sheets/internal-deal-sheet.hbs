@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deal Sheet — {{year}} {{make}} {{model}}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, Helvetica, sans-serif; color: #333; background: #fff; font-size: 14px; line-height: 1.5; }
+    .header { background-color: {{brandPrimaryColor}}; color: #fff; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; }
+    .header-left h1 { font-size: 20px; margin-bottom: 2px; }
+    .header-left p { font-size: 12px; opacity: 0.85; }
+    .header-right { text-align: right; }
+    .header-right .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
+    .header-right .date { font-size: 14px; font-weight: 600; }
+    .internal-badge { display: inline-block; background: #c62828; color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 10px; border-radius: 3px; margin-top: 6px; }
+    .section { padding: 20px 32px; border-bottom: 1px solid #eee; }
+    .section:last-child { border-bottom: none; }
+    .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: {{brandPrimaryColor}}; font-weight: 700; margin-bottom: 12px; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px 24px; }
+    .info-item .label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    .info-item .value { font-size: 14px; font-weight: 600; }
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px 24px; }
+    table.valuation-table { width: 100%; border-collapse: collapse; }
+    table.valuation-table th { background: #f5f5f5; padding: 8px 12px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; border-bottom: 2px solid #ddd; }
+    table.valuation-table td { padding: 8px 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+    table.valuation-table tr.composite { background: #f0f7ff; font-weight: 700; }
+    table.valuation-table tr.composite td { border-bottom: 2px solid #ddd; }
+    .equity-box { display: flex; align-items: center; gap: 24px; padding: 16px 20px; border-radius: 8px; background: #f9f9f9; }
+    .equity-amount { font-size: 32px; font-weight: 700; }
+    .equity-positive { color: #2e7d32; }
+    .equity-negative { color: #c62828; }
+    .equity-breakeven { color: #f57f17; }
+    .equity-details { flex: 1; }
+    .equity-details .row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+    .equity-details .row .label { color: #888; }
+    .equity-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; text-transform: capitalize; }
+    .badge-positive { background: #e8f5e9; color: #2e7d32; }
+    .badge-negative { background: #ffebee; color: #c62828; }
+    .badge-breakeven { background: #fff8e1; color: #f57f17; }
+    .recommendation { padding: 16px 20px; background: #f0f7ff; border-left: 4px solid {{brandPrimaryColor}}; border-radius: 0 8px 8px 0; font-size: 14px; line-height: 1.6; white-space: pre-line; }
+    .footer { background: #333; color: #fff; padding: 16px 32px; text-align: center; }
+    .footer .warning { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ff5252; margin-bottom: 4px; }
+    .footer .notice { font-size: 11px; color: #aaa; }
+    @media print {
+      body { font-size: 12px; }
+      .section { padding: 14px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>{{dealershipName}}</h1>
+      <p>INTERNAL DEAL SHEET</p>
+      <span class="internal-badge">Confidential</span>
+    </div>
+    <div class="header-right">
+      <div class="label">Generated</div>
+      <div class="date">{{generatedDate}}</div>
+    </div>
+  </div>
+
+  <!-- Customer Info -->
+  <div class="section">
+    <div class="section-title">Customer Information</div>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="label">Name</div>
+        <div class="value">{{firstName}} {{lastName}}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Email</div>
+        <div class="value">{{email}}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Phone</div>
+        <div class="value">{{phone}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vehicle Specifications -->
+  <div class="section">
+    <div class="section-title">Vehicle Specifications</div>
+    <div class="specs-grid">
+      <div class="info-item">
+        <div class="label">Year / Make / Model</div>
+        <div class="value">{{year}} {{make}} {{model}}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Trim</div>
+        <div class="value">{{trim}}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">VIN</div>
+        <div class="value" style="font-family: monospace; font-size: 13px;">{{vin}}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Mileage</div>
+        <div class="value">{{mileage}}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Body Class</div>
+        <div class="value">{{bodyClass}}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Engine</div>
+        <div class="value">{{engineCylinders}} cyl / {{displacementL}}L / {{fuelType}}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Drivetrain</div>
+        <div class="value">{{driveType}}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Transmission</div>
+        <div class="value">{{transmission}}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Doors</div>
+        <div class="value">{{doors}}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Color</div>
+        <div class="value">{{color}}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Plant Country</div>
+        <div class="value">{{plantCountry}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Valuation Breakdown -->
+  <div class="section">
+    <div class="section-title">Valuation Breakdown</div>
+    <table class="valuation-table">
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Wholesale</th>
+          <th>Retail</th>
+          <th>Trade-In</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="composite">
+          <td>Composite Average</td>
+          <td>{{compositeWholesale}}</td>
+          <td>{{compositeRetail}}</td>
+          <td>{{compositeTradeIn}}</td>
+        </tr>
+        {{#each valuationSources}}
+        <tr>
+          <td>{{this.sourceName}}</td>
+          <td>{{this.wholesale}}</td>
+          <td>{{this.retail}}</td>
+          <td>{{this.tradeIn}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Equity Analysis -->
+  <div class="section">
+    <div class="section-title">Equity Analysis</div>
+    <div class="equity-box">
+      <div>
+        <div class="equity-amount equity-{{equityType}}">{{equityAmount}}</div>
+        <span class="equity-badge badge-{{equityType}}">{{equityType}}</span>
+      </div>
+      <div class="equity-details">
+        <div class="row"><span class="label">Market Value (Trade-In)</span><span>{{marketValue}}</span></div>
+        <div class="row"><span class="label">Estimated Payoff</span><span>{{payoffAmount}}</span></div>
+        <div class="row"><span class="label">Equity Percentage</span><span>{{equityPercent}}%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommended Approach -->
+  <div class="section">
+    <div class="section-title">Recommended Approach</div>
+    <div class="recommendation">{{recommendedApproach}}</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="warning">Internal — Not for Customer Distribution</div>
+    <div class="notice">This document contains confidential business information intended solely for {{dealershipName}} sales staff. Do not share, forward, or reproduce.</div>
+  </div>
+</body>
+</html>

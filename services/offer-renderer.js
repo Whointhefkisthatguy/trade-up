@@ -28,7 +28,7 @@ function getTemplate(name) {
   return compiled;
 }
 
-function loadBrandProfile(orgId) {
+export function loadBrandProfile(orgId) {
   const files = readdirSync(BRAND_PROFILES_DIR);
   for (const file of files) {
     const raw = readFileSync(join(BRAND_PROFILES_DIR, file), 'utf-8');
@@ -47,7 +47,7 @@ function templateForEquityType(type) {
   }
 }
 
-function formatCurrency(amount) {
+export function formatCurrency(amount) {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
