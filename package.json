@@ -10,6 +10,7 @@
   "dependencies": {
     "@duckdb/node-api": "1.4.4-r.1",
     "@sendgrid/mail": "^8.1.0",
+    "@shaggytools/nhtsa-api-wrapper": "^3.0.4",
     "dotenv": "^16.4.0",
     "handlebars": "^4.7.8",
     "twilio": "^5.4.0",
