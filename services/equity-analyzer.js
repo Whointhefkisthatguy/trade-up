@@ -184,6 +184,8 @@ export async function batchAnalyze(orgId) {
         opportunities++;
       }
 
+      // Advance pipeline: identified → data_enriched
+      await advancePipeline(asset.id, 'ps-eq-01', 'ps-eq-02');
       // Advance pipeline: data_enriched → valuation_complete
       await advancePipeline(asset.id, 'ps-eq-02', 'ps-eq-03');
       // Advance pipeline: valuation_complete → equity_calculated

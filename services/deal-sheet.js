@@ -270,7 +270,10 @@ export async function markPresented(dealSheetId, presentedById) {
     `UPDATE deal_sheets SET status = 'presented', presented_at = current_timestamp${presentedByClause}, updated_at = current_timestamp WHERE id = '${dealSheetId}'`
   );
 
-  // Advance pipeline: equity_calculated → offer_generated
+  // Advance pipeline to offer_generated (from wherever the record currently sits)
+  await advancePipeline(dealSheet.asset_id, 'ps-eq-01', 'ps-eq-05');
+  await advancePipeline(dealSheet.asset_id, 'ps-eq-02', 'ps-eq-05');
+  await advancePipeline(dealSheet.asset_id, 'ps-eq-03', 'ps-eq-05');
   await advancePipeline(dealSheet.asset_id, 'ps-eq-04', 'ps-eq-05');
 
   dealSheet.status = 'presented';
@@ -353,7 +356,8 @@ export async function generateClientOffer(dealSheetId) {
     `UPDATE deal_sheets SET status = 'client_offer_sent', updated_at = current_timestamp WHERE id = '${dealSheetId}'`
   );
 
-  // Advance pipeline: offer_generated → offer_sent
+  // Advance pipeline to offer_sent (from wherever the record currently sits)
+  await advancePipeline(dealSheet.asset_id, 'ps-eq-04', 'ps-eq-06');
   await advancePipeline(dealSheet.asset_id, 'ps-eq-05', 'ps-eq-06');
 
   return { token, url: `/offer/${token}`, html };
