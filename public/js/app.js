@@ -33,8 +33,12 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#client-offer-modal').addEventListener('click', (e) => {
     if (e.target === $('#client-offer-modal')) closeClientOfferModal();
   });
+  $('#stage-modal-close').addEventListener('click', closeStageModal);
+  $('#stage-modal').addEventListener('click', (e) => {
+    if (e.target === $('#stage-modal')) closeStageModal();
+  });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closeModal(); closeDealSheetModal(); closeClientOfferModal(); }
+    if (e.key === 'Escape') { closeModal(); closeDealSheetModal(); closeClientOfferModal(); closeStageModal(); }
   });
 });
 
@@ -66,11 +70,12 @@ async function loadDashboard(orgId) {
   $('#welcome-panel').classList.add('hidden');
   $('#dashboard').classList.remove('hidden');
 
-  const [orgDetail, assets, pipeline, summary] = await Promise.all([
+  const [orgDetail, assets, pipeline, summary, pipelineValue] = await Promise.all([
     api(`/api/orgs/${orgId}`),
     api(`/api/orgs/${orgId}/assets`),
     api(`/api/orgs/${orgId}/pipeline`),
     api(`/api/orgs/${orgId}/equity-summary`),
+    api(`/api/orgs/${orgId}/pipeline-value`).catch(() => null),
   ]);
 
   currentOrg = orgDetail;
@@ -79,6 +84,7 @@ async function loadDashboard(orgId) {
   if (currentBrand) applyBrandColors(currentBrand);
   renderDealerHeader(orgDetail);
   renderSummaryCards(summary);
+  renderPipelineValueBanner(pipelineValue);
   renderPipeline(pipeline);
   renderVehicleTable(assets);
 }
@@ -124,12 +130,20 @@ function renderSummaryCards(summary) {
 }
 
 function renderPipeline(stages) {
-  $('#pipeline').innerHTML = stages.map((s) =>
-    `<div class="pipeline-stage">
+  $('#pipeline').innerHTML = stages.map((s) => {
+    const count = Number(s.record_count);
+    const hasRecords = count > 0;
+    const clickAttr = hasRecords
+      ? `onclick="openStageModal('${s.id}', '${s.stage_name.replace(/_/g, ' ')}')" data-stage-id="${s.id}"`
+      : '';
+    const cls = hasRecords ? 'pipeline-stage has-records' : 'pipeline-stage';
+    const hint = hasRecords ? '<div class="stage-hint">click to view</div>' : '';
+    return `<div class="${cls}" ${clickAttr}>
        <div class="stage-name">${s.stage_name.replace(/_/g, ' ')}</div>
-       <div class="stage-count">${Number(s.record_count)}</div>
-     </div>`
-  ).join('');
+       <div class="stage-count">${count}</div>
+       ${hint}
+     </div>`;
+  }).join('');
 }
 
 function renderVehicleTable(assets) {
@@ -169,6 +183,115 @@ function renderVehicleTable(assets) {
       <td>${actionBtn}</td>
     </tr>`;
   }).join('');
+}
+
+// ── Pipeline Value Banner ────────────────────────────────────────
+
+function renderPipelineValueBanner(pv) {
+  const banner = $('#pipeline-value-banner');
+  if (!pv) { banner.classList.add('hidden'); return; }
+  const fmtCurrency = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+  banner.classList.remove('hidden');
+  banner.innerHTML = `
+    <div class="pv-stat">
+      <div class="pv-label">Total Pipeline Equity</div>
+      <div class="pv-value">${fmtCurrency(pv.totalPipelineEquity)}</div>
+    </div>
+    <div class="pv-stat">
+      <div class="pv-label">Expected Conversions</div>
+      <div class="pv-value">${pv.totalExpectedDeals}</div>
+    </div>
+    <div class="pv-stat pv-gross">
+      <div class="pv-label">Projected Gross</div>
+      <div class="pv-value">${fmtCurrency(pv.totalExpectedGross)}</div>
+    </div>
+    <div class="pv-note">Based on stage conversion rates &times; $${pv.averageGrossPerDeal.toLocaleString()} avg gross per deal</div>
+  `;
+}
+
+// ── Stage Drill-Down ─────────────────────────────────────────────
+
+async function openStageModal(stageId, stageName) {
+  const modal = $('#stage-modal');
+  const body = $('#stage-modal-body');
+  $('#stage-modal-title').textContent = stageName.replace(/\b\w/g, (c) => c.toUpperCase());
+  $('#stage-modal-subtitle').textContent = 'Loading...';
+  body.innerHTML = '<div style="text-align:center;padding:40px;color:#888;">Loading records...</div>';
+  modal.classList.remove('hidden');
+
+  try {
+    const records = await api(`/api/orgs/${currentOrgId}/pipeline/${stageId}/records`);
+    $('#stage-modal-subtitle').textContent = `${records.length} record${records.length !== 1 ? 's' : ''}`;
+    if (records.length === 0) {
+      body.innerHTML = '<div style="text-align:center;padding:40px;color:#888;">No records in this stage</div>';
+    } else {
+      body.innerHTML = renderStageTable(records, stageId);
+    }
+  } catch (err) {
+    body.innerHTML = `<div style="text-align:center;padding:40px;color:#c62828;">Error loading records: ${err.message}</div>`;
+  }
+}
+
+function renderStageTable(records, stageId) {
+  const stageNum = parseInt(stageId.replace('ps-eq-', ''), 10);
+  const fmtMoney = (v) => v != null ? `$${Number(v).toLocaleString()}` : '—';
+
+  function timeInStage(enteredAt) {
+    if (!enteredAt) return { text: '—', cls: '' };
+    const ms = Date.now() - new Date(enteredAt).getTime();
+    const days = Math.floor(ms / 86400000);
+    const hours = Math.floor((ms % 86400000) / 3600000);
+    const cls = days >= 14 ? 'time-warn' : 'time-ok';
+    const text = days > 0 ? `${days}d ${hours}h` : `${hours}h`;
+    return { text, cls };
+  }
+
+  let headers = '<th>Customer</th><th>Vehicle</th><th>Equity</th><th>Time in Stage</th>';
+  if (stageNum >= 4) headers += '<th>Market Value</th><th>Payoff</th><th>Type</th>';
+  if (stageNum >= 5) headers += '<th>Deal Sheet</th>';
+  if (stageNum >= 6) headers += '<th>Token</th>';
+  if (stageNum >= 7) headers += '<th>Accessed</th>';
+
+  const rows = records.map((r) => {
+    const time = timeInStage(r.entered_stage_at);
+    const eqCls = r.equity_amount != null ? (Number(r.equity_amount) >= 0 ? 'equity-positive' : 'equity-negative') : '';
+    let cols = `
+      <td><div class="customer-name">${r.first_name || ''} ${r.last_name || ''}</div><div class="customer-email">${r.email || ''}</div></td>
+      <td class="vehicle-info">${r.year || ''} ${r.make || ''} ${r.model || ''}</td>
+      <td class="equity-value ${eqCls}">${fmtMoney(r.equity_amount)}</td>
+      <td><span class="time-badge ${time.cls}">${time.text}</span></td>`;
+    if (stageNum >= 4) {
+      const typeBadge = r.equity_type ? `<span class="badge badge-${r.equity_type}">${r.equity_type}</span>` : '—';
+      cols += `<td>${fmtMoney(r.market_value)}</td><td>${fmtMoney(r.payoff_amount)}</td><td>${typeBadge}</td>`;
+    }
+    if (stageNum >= 5) {
+      const dsStatus = r.deal_sheet_status ? `<span class="badge badge-${r.deal_sheet_status}">${r.deal_sheet_status.replace(/_/g, ' ')}</span>` : '—';
+      const dsDate = r.presented_at ? `<div style="font-size:11px;color:#888;margin-top:2px">${new Date(r.presented_at).toLocaleDateString()}</div>` : '';
+      cols += `<td>${dsStatus}${dsDate}</td>`;
+    }
+    if (stageNum >= 6) {
+      let tokenInfo = '—';
+      if (r.token_status) {
+        const tokenCls = r.token_status === 'active' ? 'badge-active' : r.token_status === 'expired' ? 'badge-expired' : 'badge-revoked';
+        const expiry = r.expires_at ? `<div style="font-size:11px;color:#888;margin-top:2px">Exp: ${new Date(r.expires_at).toLocaleDateString()}</div>` : '';
+        tokenInfo = `<span class="badge ${tokenCls}">${r.token_status}</span>${expiry}`;
+      }
+      cols += `<td>${tokenInfo}</td>`;
+    }
+    if (stageNum >= 7) {
+      const accessCount = r.access_count != null ? Number(r.access_count) : 0;
+      const firstAccess = r.first_accessed_at ? new Date(r.first_accessed_at).toLocaleDateString() : '—';
+      cols += `<td>${accessCount} view${accessCount !== 1 ? 's' : ''}<div style="font-size:11px;color:#888;margin-top:2px">${firstAccess}</div></td>`;
+    }
+    return `<tr>${cols}</tr>`;
+  }).join('');
+
+  return `<table class="stage-table"><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function closeStageModal() {
+  $('#stage-modal').classList.add('hidden');
+  $('#stage-modal-body').innerHTML = '';
 }
 
 // ── Batch Analysis ───────────────────────────────────────────────

@@ -378,6 +378,112 @@ body {
   pointer-events: none;
 }
 
+/* ── Pipeline Value Banner ──────────────────────────────────────── */
+
+.pipeline-value-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 24px;
+  padding: 20px 28px;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #1a1a2e, #2a2a4e);
+  border-radius: 10px;
+  color: #fff;
+  flex-wrap: wrap;
+}
+
+.pv-stat { text-align: center; }
+.pv-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 4px; }
+.pv-value { font-size: 26px; font-weight: 700; }
+.pv-gross .pv-value { color: #66bb6a; }
+.pv-note { font-size: 11px; opacity: 0.5; width: 100%; text-align: center; margin-top: 4px; }
+
+/* ── Pipeline Stage Drill-Down ─────────────────────────────────── */
+
+.pipeline-stage.has-records { cursor: pointer; }
+.pipeline-stage.has-records:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.stage-hint {
+  font-size: 10px;
+  color: #aaa;
+  margin-top: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.pipeline-stage.has-records:hover .stage-hint { opacity: 1; }
+
+/* ── Stage Modal ───────────────────────────────────────────────── */
+
+.modal-tall { max-height: 85vh; }
+
+.modal-body {
+  overflow-y: auto;
+  padding: 20px;
+  flex: 1;
+}
+
+.modal-subtitle {
+  font-size: 13px;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* ── Stage Table ───────────────────────────────────────────────── */
+
+.stage-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stage-table th {
+  background: #fafafa;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  border-bottom: 1px solid #eee;
+}
+
+.stage-table td {
+  padding: 10px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: top;
+}
+
+.stage-table tbody tr:hover { background: #f9f9fb; }
+
+.stage-table .customer-name { font-weight: 600; }
+.stage-table .customer-email { font-size: 12px; color: #888; }
+.stage-table .vehicle-info { font-weight: 500; }
+
+/* ── Time Badge ────────────────────────────────────────────────── */
+
+.time-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.time-ok { background: #e8f5e9; color: #2e7d32; }
+.time-warn { background: #fff3e0; color: #e65100; }
+
+/* ── Token Status Badges ───────────────────────────────────────── */
+
+.badge-active { background: #e8f5e9; color: #2e7d32; }
+.badge-expired { background: #fff3e0; color: #e65100; }
+.badge-revoked { background: #ffebee; color: #c62828; }
+
 /* ── Responsive ─────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
